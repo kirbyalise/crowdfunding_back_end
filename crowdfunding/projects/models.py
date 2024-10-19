@@ -13,6 +13,8 @@ class Project(models.Model):
         on_delete=models.CASCADE,
         related_name='owned_projects'
     )
+    
+    # total_raised= *********
 
 class Pledge(models.Model):
     amount = models.IntegerField()
@@ -28,3 +30,4 @@ class Pledge(models.Model):
         on_delete=models.CASCADE,
         related_name='pledges'
     )
+    
