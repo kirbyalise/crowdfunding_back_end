@@ -9,8 +9,6 @@ class PledgeSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-
-
 # ****
 class PledgeDetailSerializer(serializers.ModelSerializer):
     supporter = serializers.ReadOnlyField(source='supporter.id')
