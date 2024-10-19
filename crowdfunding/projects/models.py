@@ -13,8 +13,11 @@ class Project(models.Model):
         on_delete=models.CASCADE,
         related_name='owned_projects'
     )
-    
-    # total_raised= *********
+    # testing
+    def total_raised(self):
+        total = sum(pledge.amount for pledge in self.pledges.all())
+        return total
+
 
 class Pledge(models.Model):
     amount = models.IntegerField()
@@ -30,4 +33,4 @@ class Pledge(models.Model):
         on_delete=models.CASCADE,
         related_name='pledges'
     )
-    
+        # total_raised= *********

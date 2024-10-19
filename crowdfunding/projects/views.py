@@ -7,6 +7,8 @@ from .models import Project, Pledge
 from .serializers import ProjectSerializer, PledgeSerializer, ProjectDetailSerializer
 from rest_framework import status, permissions
 from .permissions import IsOwnerOrReadOnly, IsSupporterOrReadOnly
+from rest_framework import generics 
+# TESTING
 
 class ProjectList(APIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
@@ -29,12 +31,14 @@ class ProjectList(APIView):
             status=status.HTTP_400_BAD_REQUEST
     )
 
+
 class ProjectDetail(APIView):
     
     permission_classes = [
         permissions.IsAuthenticatedOrReadOnly,
         IsOwnerOrReadOnly
     ]
+
     def get_object(self,pk):
         try:
             project = Project.objects.get(pk=pk)
@@ -42,7 +46,7 @@ class ProjectDetail(APIView):
             return project
         except Project.DoesNotExist:
             raise Http404
-        
+
     def get(self, request, pk):
         project = self.get_object(pk)
         serializer = ProjectDetailSerializer(project)
@@ -68,12 +72,13 @@ class ProjectDetail(APIView):
         project.delete()
         return Response("Byeeee")
 
+
 class PledgeList(APIView):
     def get(self, request):
         pledges = Pledge.objects.all()
         serializer = PledgeSerializer(pledges, many=True)
         return Response(serializer.data)
-    
+
     def post(self, request):
         serializer = PledgeSerializer(data=request.data)
         if serializer.is_valid():
@@ -89,7 +94,7 @@ class PledgeList(APIView):
 
 
 class PledgeDetail(APIView):
-    
+
     permission_classes = [
         permissions.IsAuthenticatedOrReadOnly,
         IsSupporterOrReadOnly
@@ -107,7 +112,6 @@ class PledgeDetail(APIView):
         pledge = self.get_object(pk)
         serializer = PledgeSerializer(pledge)
         return Response(serializer.data)
-
 
     def put(self, request, pk):
         pledge = self.get_object(pk)
@@ -129,3 +133,8 @@ class PledgeDetail(APIView):
         pledge = self.get_object(pk)
         pledge.delete()
         return Response("Byeeee")
+
+# TESTING
+class ProjectDetailView(generics.RetrieveAPIView):
+    queryset = Project.objects.all()
+    serializer_class = ProjectSerializer

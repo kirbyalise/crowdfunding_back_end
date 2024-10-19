@@ -1,15 +1,14 @@
 from rest_framework import serializers
 from django.apps import apps
 
-
 class PledgeSerializer(serializers.ModelSerializer):
     supporter = serializers.ReadOnlyField(source='supporter.id')
+
     class Meta:
         model = apps.get_model('projects.Pledge')
         fields = '__all__'
 
 
-# ****
 class PledgeDetailSerializer(serializers.ModelSerializer):
     supporter = serializers.ReadOnlyField(source='supporter.id')
     class Meta:
@@ -22,22 +21,37 @@ class PledgeDetailSerializer(serializers.ModelSerializer):
             return instance
 
 
+# class ProjectSerializer(serializers.ModelSerializer):
+#     owner = serializers.ReadOnlyField(source='owner.id')
+#     class Meta:
+#         model = apps.get_model('projects.Project')
+#         fields = '__all__'
 class ProjectSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.id')
+    total_raised = serializers.SerializerMethodField()  # Add this to calculate total raised
+
     class Meta:
         model = apps.get_model('projects.Project')
-        fields = '__all__'
+        fields = '__all__'  # Include total_raised in the fields
+
+    def get_total_raised(self, obj):
+        # Calculate the sum of all pledges related to this project
+        return sum(pledge.amount for pledge in obj.pledges.all())
+
 
 class ProjectDetailSerializer(ProjectSerializer):
     pledges = PledgeSerializer(many=True, read_only=True)
     
-    def update(self, instance, validated_data):
-        instance.title = validated_data.get('title', instance.title)
-        instance.description = validated_data.get('description', instance.description)
-        instance.goal = validated_data.get('goal', instance.goal)
-        instance.image = validated_data.get('image', instance.image)
-        instance.is_open = validated_data.get('is_open', instance.is_open)
-        instance.date_created = validated_data.get('date_created', instance.date_created)
-        instance.owner = validated_data.get('owner', instance.owner)
-        instance.save()
-        return instance
+    class Meta(ProjectSerializer.Meta):
+        fields = '__all__'  # Include all fields, including total_raised and pledges
+    
+    # def update(self, instance, validated_data):
+    #     instance.title = validated_data.get('title', instance.title)
+    #     instance.description = validated_data.get('description', instance.description)
+    #     instance.goal = validated_data.get('goal', instance.goal)
+    #     instance.image = validated_data.get('image', instance.image)
+    #     instance.is_open = validated_data.get('is_open', instance.is_open)
+    #     instance.date_created = validated_data.get('date_created', instance.date_created)
+    #     instance.owner = validated_data.get('owner', instance.owner)
+    #     instance.save()
+    #     return instance
