@@ -77,20 +77,51 @@ class PledgeList(APIView):
     def get(self, request):
         pledges = Pledge.objects.all()
         serializer = PledgeSerializer(pledges, many=True)
+        # ----------
         return Response(serializer.data)
 
     def post(self, request):
-        serializer = PledgeSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(supporter=request.user)
+        # Check to see if project is opened or not
+        # project_id = request.data.get('project')
+        # projects = Project.objects.filter(pk=project_id)
+        # if projects[0].is_open:
+        #     print('open')
+        #     serializer = PledgeSerializer(data=request.data)
+        #     if serializer.is_valid():
+        #         serializer.save(supporter=request.user)
+        #         return Response(
+        #             serializer.data,
+        #             status=status.HTTP_201_CREATED
+        #         )
+        #     return Response(
+        #         serializer.errors,
+        #         status=status.HTTP_400_BAD_REQUEST
+        #     )
+        project_id = request.data.get('project')
+        try:
+            project = Project.objects.get(pk=project_id)
+        except Project.DoesNotExist:
+            raise Http404
+        
+        if project.is_open:
+            print('open')
+            serializer = PledgeSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save(supporter=request.user)
+                return Response(
+                    serializer.data,
+                    status=status.HTTP_201_CREATED
+                )
             return Response(
-                serializer.data,
-                status=status.HTTP_201_CREATED
+                serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST
             )
-        return Response(
-            serializer.errors,
-            status=status.HTTP_400_BAD_REQUEST
-        )
+        else:
+            print('closed')
+            return Response(
+                {"Sorry this project is closed!"},
+                status=status.HTTP_403_FORBIDDEN
+            )
 
 
 class PledgeDetail(APIView):

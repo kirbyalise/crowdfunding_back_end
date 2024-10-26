@@ -41,11 +41,6 @@ Project page:
   - If I am not the owner I can add a pledge  
 
 ### API Spec
-{{ Fill out the table below to define your endpoints. An example of what this might look like is shown at the bottom of the page. 
-
-It might look messy here in the PDF, but once it's rendered it looks very neat! 
-
-It can be helpful to keep the markdown preview open in VS Code so that you can see what you're typing more easily. }}
 
 | URL              | HTTP Method | Purpose               | Request Body         | Success Response Code | Authentication/Authorisation |
 | ---              | ----------- | -------               | ------------         | --------------------- | ---------------------------- |
@@ -53,18 +48,19 @@ It can be helpful to keep the markdown preview open in VS Code so that you can s
 | /users           | GET         | Get all users         | User objects         | 302                   | Admin                        |
 | /users           | PUT         | Edit user details     | Username and password| 200                   | Must be logged in            |
 | /users/<pk>/     | GET         | Get specific user     | User object          | 302                   | Admin                        |
-| /users/<pk>/     | DELETE      | Delete a user         | N/A                  | 204                   | Must be logged in            |
+| /users/<pk>/     | DELETE      | Delete a user         | N/A                  | 200                   | Must be logged in            |
 | /projects        | POST        | Post a project        | Project object       | 201                   | Must be logged in            |
 | /projects        | GET         | Find all projects     | N/A                  | 302                   | Must be logged in            |
+| /projects        | GET         | Find pledge totals    | N/A                  | 200                   | Must be logged in            |
 | /projects/<pk>/  | GET         | Find a project        | Project object       | 302                   | Must be logged in            |
 | /projects/<pk>/  | PUT         | Edit a project        | Project object       | 200                   | User only                    |
-| /projects/<pk>/  | DELETE      | Delete a project      | N/A                  | 204                   | Must be logged in            |
+| /projects/<pk>/  | DELETE      | Delete a project      | N/A                  | 200                   | Must be logged in            |
 | /api-token-auth/ | POST        | Gets user token       | Username and password| 302                   | User only                    |
 | /pledges         | POST        | Posts a pledge        | Pledge object        | 200                   | Must be logged in            |
 | /pledges/<pk>/   | GET         | Find a pledge         | Pledge object        | 302                   | Must be logged in            |
 | /pledges/        | GET         | Find all pledges      | Pledge object        | 302                   | Must be logged in            |
 | /pledges         | PUT         | Edit a pledge         | Pledge object        | 200                   | Must be logged in            |
-| /pledges/<pk>/   | DELETE      | Delete a pledge       | Pledge object        | 204                   | User only- Time period       |
+| /pledges/<pk>/   | DELETE      | Delete a pledge       | Pledge object        | 200                   | User only- Time period       |
 
 
 
@@ -76,7 +72,7 @@ It can be helpful to keep the markdown preview open in VS Code so that you can s
 
 
 ### DB Schema
-![]( {{ ./relative/path/to/your/schema/image.png }} )
+![]( ./ERM.jpg )
 
 
 
