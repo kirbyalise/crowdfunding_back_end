@@ -18,10 +18,12 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.authtoken.views import obtain_auth_token
 from rest_framework.documentation import include_docs_urls
+from users.views import CustomAuthToken
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('projects.urls')),
     path('users/', include('users.urls')),
     path('api-token-auth/', obtain_auth_token, name='api_token_auth'),
+    path('api-token-auth/', CustomAuthToken.as_view(), name='api_token_auth'),
 ]
