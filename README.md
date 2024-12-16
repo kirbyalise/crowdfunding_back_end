@@ -1,11 +1,7 @@
 # Crowdfunding Back End
 Kirby Thomson
 
-# Link
-https://crumbfund-18d9a25d981a.herokuapp.com/
-
 ## Planning:
-
 ### Concept/Name
 CrumbFund
 
@@ -18,6 +14,14 @@ Backer’s Story:
     As a dedicated baking enthusiast, I want to support emerging bakers and creative innovators. By backing a project on BakeFund, I can enjoy delicious rewards like boxes of cookies or cupcakes, and even have the chance to try out new baking tools or ingredients before they hit the market.
 
 ### Front End Pages/Functionality
+<!-- - {{ A page on the front end }}
+    - {{ A list of dot-points showing functionality is available on this page }}
+    - {{ etc }}
+    - {{ etc }}
+- {{ A second page available on the front end }}
+    - {{ Another list of dot-points showing functionality }}
+    - {{ etc }} -->
+
 
 Home page:
   - Link to my user profile
@@ -35,7 +39,7 @@ Project page:
   - List of current pledges 
   - If I am the owner I can edit the project
   - If I am not the owner I can add a pledge  
----
+
 ### API Spec
 
 | URL              | HTTP Method | Purpose               | Request Body         | Success Response Code | Authentication/Authorisation |
@@ -43,102 +47,82 @@ Project page:
 | /users           | POST        | Create a user         | User object          | 201                   | N/A                          |
 | /users           | GET         | Get all users         | User objects         | 302                   | Admin                        |
 | /users           | PUT         | Edit user details     | Username and password| 200                   | Must be logged in            |
-| /users/pk/       | GET         | Get specific user     | User object          | 302                   | Admin                        |
-| /users/pk/       | DELETE      | Delete a user         | N/A                  | 200                   | Must be logged in            |
+| /users/<pk>/     | GET         | Get specific user     | User object          | 302                   | Admin                        |
+| /users/<pk>/     | DELETE      | Delete a user         | N/A                  | 200                   | Must be logged in            |
 | /projects        | POST        | Post a project        | Project object       | 201                   | Must be logged in            |
 | /projects        | GET         | Find all projects     | N/A                  | 302                   | Must be logged in            |
-| /projects/pk/    | GET         | Find a project        | Project object       | 302                   | Must be logged in            |
-| /projects/pk/    | PUT         | Edit a project        | Project object       | 200                   | User only                    |
-| /projects/pk/    | DELETE      | Delete a project      | N/A                  | 200                   | Must be logged in            |
+| /projects        | GET         | Find pledge totals    | N/A                  | 200                   | Must be logged in            |
+| /projects/<pk>/  | GET         | Find a project        | Project object       | 302                   | Must be logged in            |
+| /projects/<pk>/  | PUT         | Edit a project        | Project object       | 200                   | User only                    |
+| /projects/<pk>/  | DELETE      | Delete a project      | N/A                  | 200                   | Must be logged in            |
 | /api-token-auth/ | POST        | Gets user token       | Username and password| 302                   | User only                    |
 | /pledges         | POST        | Posts a pledge        | Pledge object        | 200                   | Must be logged in            |
-| /pledges/pk/     | GET         | Find a pledge         | Pledge object        | 302                   | Must be logged in            |
+| /pledges/<pk>/   | GET         | Find a pledge         | Pledge object        | 302                   | Must be logged in            |
 | /pledges/        | GET         | Find all pledges      | Pledge object        | 302                   | Must be logged in            |
 | /pledges         | PUT         | Edit a pledge         | Pledge object        | 200                   | Must be logged in            |
-| /pledges/pk/     | DELETE      | Delete a pledge       | Pledge object        | 200                   | User only- Time period       |
----
+| /pledges/<pk>/   | DELETE      | Delete a pledge       | Pledge object        | 200                   | User only- Time period       |
+
+
+
+
+
+
+
+
+
+
 ### DB Schema
 ![]( ./ERM.jpg )
 
----
- ## Step-by-Step Instructions: Registering a New User and Creating a New Project
 
-To successfully register a new user and create a new project in the crowdfunding app, follow the steps below. Each step includes the endpoint, HTTP method, and example body data.
 
----
-### Step 1: Register a New User
+<!-- Project Requirements
+Your crowdfunding project must:
 
-- **Endpoint**: `/users`
-- **HTTP Method**: `POST`
-- **Body Data**:
-   ```json
-   {
-       "username": "test",
-       "password": "testing123",
-       "first_name": "Testy",
-       "last_name": "McTest",
-       "email": "test@test.com"
-   }
-**Response:**
-201 Created: Indicates that the user has been successfully registered.
+ Be separated into two distinct projects: an API built using the Django Rest Framework and a website built using React.
+ Have a cool name, bonus points if it includes a pun and/or missing vowels. See https://namelix.com/ for inspiration. (Bonus Points are meaningless)
+X Have a clear target audience.
 
----
-### Step 2: Authenticate to Obtain a Token
+ Have user accounts. A user should have at least the following attributes:
+ Username
+ Email address
+ Password
 
-- **Endpoint**: `/api-token-auth/`
-- **HTTP Method**: `POST`
-- **Body Data**: 
+ Ability to create a “project” to be crowdfunded which will include at least the following attributes:
+ Title
+ Owner (a user)
+ Description
+ Image
+ Target amount to fundraise
+ Whether it is currently open to accepting new supporters or not
+ When the project was created
 
-    ```json
-    {
-    "username": "test",
-    "password": "testing123"
-    }
-**Response:**
-200 OK: Returns a token that must be used for subsequent authenticated requests.
+ Ability to “pledge” to a project. A pledge should include at least the following attributes:
+ An amount
+ The project the pledge is for
+ The supporter/user (i.e. who created the pledge)
+ Whether the pledge is anonymous or not
+ A comment to go along with the pledge
+ Implement suitable update/delete functionality, e.g. should a project owner be allowed to update a project description?
+ Implement suitable permissions, e.g. who is allowed to delete a pledge?
+ Return the relevant status codes for both successful and unsuccessful requests to the API.
+ Handle failed requests gracefully (e.g. you should have a custom 404 page rather than the default error page).
+ Use Token Authentication, including an endpoint to obtain a token along with the current user's details.
+ Implement responsive design.
 
-Note: Copy the token from the response, as you will use it for authorisation in the next step.
+Additional Notes
+No additional libraries or frameworks, other than what we use in class, are allowed unless approved by the Lead Mentor.
 
----
+Note that while this is a crowdfunding website, actual money transactions are out of scope for this project.
 
-### Step 3: Create a New Project
+Submission
+To submit, fill out this Google form, including a link to your Github repo. Your lead mentor will respond with any feedback they can offer, and you can approach the mentoring team if you would like help to make improvements based on this feedback!
 
-- **Endpoint**: `/projects`
-- **HTTP Method**: `POST`
-- **Authorization**: Add the token from Step 2 in the Auth Bearer Token
-- **Body Data**: 
-- 
-    ```json
-    {
-    "title": "My First Project",
-    "description": "This is a test project to demonstrate the creation of a new project.",
-    "goal": 1000,
-    "image": "http://example.com/image.jpg",
-    "is_open": true,
-    "date_created": "2024-10-27"
-    }
-**Response**: 201 Created: Indicates that the project has been successfully created.
+Please include the following in your readme doc:
 
----
-
-### Screenshots
-![](./crowdfunding/screenshots/POST_User.PNG)
-![](./crowdfunding/screenshots/GET_List_Users.PNG)
-![](./crowdfunding/screenshots/PUT_User.PNG)
-![](./crowdfunding/screenshots/GET_User.PNG)
-![](./crowdfunding/screenshots/DELETE_User.PNG)
-![](./crowdfunding/screenshots/POST_Project.PNG)
-![](./crowdfunding/screenshots/GET_All_Projects.PNG)
-![](./crowdfunding/screenshots/GET_Pledge_Totals.PNG)
-![](./crowdfunding/screenshots/GET_Pledge_Totals_Sum.PNG)
-![](./crowdfunding/screenshots/PUT_Project.PNG)
-![](./crowdfunding/screenshots/DELETE_Project.PNG)
-![](./crowdfunding/screenshots/POST_API_Token.PNG)
-![](./crowdfunding/screenshots/POST_Pledge.PNG)
-![](./crowdfunding/screenshots/POST_Pledge_Fail.PNG)
-![](./crowdfunding/screenshots/GET_Pledge.PNG)
-![](./crowdfunding/screenshots/GET_Pledge_Anonymous.PNG)
-![](./crowdfunding/screenshots/GET_All_Pledges.PNG)
-![](./crowdfunding/screenshots/PUT_Pledge.PNG)
-![](./crowdfunding/screenshots/DELETE_Pledge.PNG)
-
+ A link to the deployed project.
+ A screenshot of Insomnia, demonstrating a successful GET method for any endpoint.
+ A screenshot of Insomnia, demonstrating a successful POST method for any endpoint.
+ A screenshot of Insomnia, demonstrating a token being returned.
+ Step by step instructions for how to register a new user and create a new project (i.e. endpoints and body data).
+ Your refined API specification and Database Schema. -->
