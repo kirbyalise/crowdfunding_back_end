@@ -8,7 +8,9 @@ from .serializers import ProjectSerializer, PledgeSerializer, ProjectDetailSeria
 from rest_framework import status, permissions
 from .permissions import IsOwnerOrReadOnly, IsSupporterOrReadOnly
 from rest_framework import generics 
-# TESTING
+from rest_framework.decorators import api_view
+from rest_framework.reverse import reverse
+
 
 class ProjectList(APIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
@@ -33,13 +35,14 @@ class ProjectList(APIView):
 
 
 class ProjectDetail(APIView):
+
     
     permission_classes = [
         permissions.IsAuthenticatedOrReadOnly,
         IsOwnerOrReadOnly
     ]
 
-    def get_object(self,pk):
+    def get_object(self, pk):
         try:
             project = Project.objects.get(pk=pk)
             self.check_object_permissions(self.request, project)
@@ -53,24 +56,24 @@ class ProjectDetail(APIView):
         return Response(serializer.data)
 
     def put(self, request, pk):
-            project = self.get_object(pk)
-            serializer = ProjectDetailSerializer(
-                instance=project,
-                data=request.data,
-                partial=True
-            )
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data)
-            return Response(
-                serializer.errors,
-                status=status.HTTP_400_BAD_REQUEST
-            )
+        project = self.get_object(pk)
+        serializer = ProjectDetailSerializer(
+            instance=project,
+            data=request.data,
+            partial=True
+        )
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(
+            serializer.errors,
+            status=status.HTTP_400_BAD_REQUEST
+        )
 
     def delete(self, request, pk):
         project = self.get_object(pk)
         project.delete()
-        return Response("Byeeee")
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class PledgeList(APIView):
@@ -169,3 +172,11 @@ class PledgeDetail(APIView):
 class ProjectDetailView(generics.RetrieveAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
+
+@api_view(['GET'])
+def api_root(request, format=None):
+    return Response({
+        'projects': reverse('project-list', request=request, format=format),
+        'pledges': reverse('pledge-list', request=request, format=format),
+        'users': reverse('user-list', request=request, format=format),
+    })
